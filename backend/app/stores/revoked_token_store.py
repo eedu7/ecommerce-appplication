@@ -1,7 +1,7 @@
 from redis.asyncio import Redis
 
 from core.config import config
-from core.dependencies import REDIS_DEP
+from core.dependencies import Redis_Dep
 from core.redis import BaseRedisStore
 
 
@@ -16,5 +16,5 @@ class RevokedTokenStore(BaseRedisStore):
         return await self.exists(self._make_key(jti))
 
 
-def get_revoked_token_store(redis: REDIS_DEP) -> RevokedTokenStore:
+def get_revoked_token_store(redis: Redis_Dep) -> RevokedTokenStore:
     return RevokedTokenStore(redis, config.REDIS_TOKEN_REVOKE_PREFIX)
