@@ -14,7 +14,7 @@ async_engine: AsyncEngine = create_async_engine(
     echo=True if config.ENVIRONMENT == Environment.DEVELOPMENT else False,
     pool_pre_ping=config.DB_POOL_PRE_PING,
     pool_size=config.DB_POOL_SIZE,
-    max_overflow=config.DB_POOL_MAX_OVERFLOW,
+    max_overflow=config.DB_MAX_OVERFLOW,
     pool_recycle=config.DB_POOL_RECYCLE,
 )
 

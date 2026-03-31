@@ -9,11 +9,11 @@ class TimestampMixin:
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
-        sortable=32,
+        sort_order=10,
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
-        sortable=32,
+        sort_order=10,
     )
