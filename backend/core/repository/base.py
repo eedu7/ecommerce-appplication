@@ -16,7 +16,7 @@ class BaseRepository(Generic[T]):
         self.model = model
         self.session = session
 
-    async def get_by_id(self, uid: UUID) -> T | None:
+    async def get_by_uid(self, uid: UUID) -> T | None:
         return await self.session.get(self.model, uid)
 
     async def get_all(self, skip: int = 0, limit: int | None = None) -> Sequence[T]:
