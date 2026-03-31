@@ -1,0 +1,229 @@
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict
+from uuid import uuid4
+
+import jwt
+from jwt import (
+    DecodeError,
+    ExpiredSignatureError,
+    ImmatureSignatureError,
+    InvalidAlgorithmError,
+    InvalidAudienceError,
+    InvalidIssuerError,
+    InvalidSignatureError,
+    MissingRequiredClaimError,
+)
+
+from app.schemas.extra.token import Token, TokenPayload, TokenType
+from core.config import config
+from core.exceptions import InternalServerException
+from core.exceptions.jwt_exceptions import (
+    InvalidTokenException,
+    InvalidTokenTypeException,
+    MissingTokenException,
+    TokenExpiredException,
+)
+
+
+class JWTService:
+    def __init__(self) -> None:
+        pass
+
+    def build_token_pair(
+        self,
+        subject: str,
+        extra_claims: Dict[str, Any] | None = None,
+    ) -> Token:
+        access_ttl = timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES)
+        refresh_ttl = timedelta(days=config.JWT_REFRESH_TOKEN_EXPIRE_DAYS)
+
+        claims = extra_claims or {}
+
+        access_token = self._build_token(
+            subject,
+            "access",
+            ttl=access_ttl,
+            extra_claims=claims,
+        )
+        refresh_token = self._build_token(
+            subject,
+            "refresh",
+            ttl=refresh_ttl,
+            extra_claims=claims,
+        )
+
+        return Token(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            expires_in=int(access_ttl.total_seconds()),
+        )
+
+    def decode_token(
+        self,
+        token: str | None,
+        *,
+        expected_token: TokenType | None = None,
+        verify_exp: bool = True,
+    ) -> TokenPayload:
+        if not token or not token.strip():
+            raise MissingTokenException()
+
+        raw_payload = self._decode_jwt(token=token, verify_exp=verify_exp)
+        payload = self._build_payload(raw_payload)
+
+        if expected_token is not None and payload.type != expected_token:
+            raise InvalidTokenTypeException(
+                expected=expected_token, received=payload.type
+            )
+
+        return payload
+
+    def refresh_access_token(
+        self, refresh_token: str, extra_claims: Dict[str, Any] | None = None
+    ) -> Token:
+        payload = self.decode_token(refresh_token, expected_token="refresh")
+
+        return self.build_token_pair(
+            subject=payload.sub, extra_claims={**payload.extra, **(extra_claims or {})}
+        )
+
+    async def revoke_tokens(self, access_token: str, refresh_token: str) -> None:
+        access_payload = self.decode_expired_token(access_token)
+        await self._revoke_token(
+            access_payload.jti, config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        )
+
+        refresh_payload = self.decode_expired_token(refresh_token)
+        await self._revoke_token(
+            refresh_payload.jti, config.JWT_REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
+        )
+
+    async def _revoke_token(self, jti: str, ttl: int | None = None) -> None:
+        if ttl is None:
+            ttl = config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        # await self._revocation_store.revoke(jti, ttl=ttl)
+
+    async def revoke_token_by_raw(self, token: str) -> None:
+        payload = self.decode_token(token, verify_exp=False)
+        await self._revoke_token(payload.jti)
+
+    async def is_token_revoked(self, jti: str) -> bool:
+        # return await self._revocation_store.is_revoked(jti)
+        pass
+
+    def decode_expired_token(self, token: str) -> TokenPayload:
+        return self.decode_token(token, verify_exp=False)
+
+    def _build_token(
+        self,
+        subject: str,
+        token_type: TokenType,
+        ttl: timedelta,
+        extra_claims: Dict[str, Any],
+    ) -> str:
+        now = datetime.now(tz=timezone.utc)
+
+        payload: Dict[str, Any] = {
+            "sub": subject,
+            "type": token_type,
+            "jti": str(uuid4()),
+            "iat": now,
+            "nbf": now,
+            "exp": now + ttl,
+            **extra_claims,
+        }
+
+        if config.JWT_ISSUER:
+            payload["iss"] = config.JWT_ISSUER
+        if config.JWT_AUDIENCE:
+            payload["aud"] = config.JWT_AUDIENCE
+
+        try:
+            return jwt.encode(
+                payload, key=config.JWT_SECRET_KEY, algorithm=config.JWT_ALGORITHM
+            )
+        except Exception as exc:
+            raise InternalServerException(
+                message="Token creation failed", details={"reason": str(exc)}
+            ) from exc
+
+    def _decode_jwt(self, token: str, *, verify_exp: bool) -> Dict[str, Any]:
+        options: Dict[str, Any] = {
+            "verify_exp": verify_exp,
+            "verify_nbf": True,
+            "verify_iss": bool(config.JWT_ISSUER),
+            "verify_aud": bool(config.JWT_AUDIENCE),
+            "require": ["sub", "jti", "iat", "exp", "type"],
+        }
+
+        decode_kwargs: Dict[str, Any] = {
+            "algorithms": [config.JWT_ALGORITHM],
+            "options": options,
+            "leeway": timedelta(seconds=config.JWT_LEEWAY_SECONDS),
+        }
+        if config.JWT_ISSUER:
+            decode_kwargs["issuer"] = config.JWT_ISSUER
+        if config.JWT_AUDIENCE:
+            decode_kwargs["audience"] = config.JWT_AUDIENCE
+
+        try:
+            return jwt.decode(token, key=config.JWT_SECRET_KEY, **decode_kwargs)
+        except ExpiredSignatureError as exc:
+            raise TokenExpiredException() from exc
+        except InvalidSignatureError as exc:
+            raise InvalidTokenException(
+                message="Token signature verification failed"
+            ) from exc
+        except (InvalidIssuerError, InvalidAudienceError) as exc:
+            raise InvalidTokenException(message=str(exc)) from exc
+        except MissingRequiredClaimError as exc:
+            raise InvalidTokenException(
+                message=f"Token is missing required claim: {exc.claim}"
+            ) from exc
+        except InvalidAlgorithmError as exc:
+            raise InvalidTokenException(
+                message=f"Token uses an unsupported algorithm: {exc}"
+            ) from exc
+        except DecodeError as exc:
+            raise InvalidTokenException(
+                message="Token could not be decoded - it may be malformed"
+            ) from exc
+        except ImmatureSignatureError as exc:
+            raise InvalidTokenException(
+                message="Token is not yet valid (nbf claim)"
+            ) from exc
+        except Exception as exc:
+            raise InternalServerException(
+                message="Token validation encountered an unexpected error",
+                details={"reason": str(exc)},
+            ) from exc
+
+    def _build_payload(self, raw: Dict[str, Any]) -> TokenPayload:
+        known_keys = {"sub", "type", "jti", "iat", "exp", "nbf", "iss", "aud"}
+
+        try:
+            return TokenPayload(
+                sub=raw["sub"],
+                type=raw["type"],
+                jti=raw["jti"],
+                iat=datetime.fromtimestamp(raw["iat"], tz=timezone.utc),
+                exp=datetime.fromtimestamp(raw["exp"], tz=timezone.utc),
+                nbf=(
+                    datetime.fromtimestamp(raw["nbf"], tz=timezone.utc)
+                    if "nbf" in raw
+                    else None
+                ),
+                iss=raw.get("iss"),
+                aud=raw.get("aud"),
+                extra={
+                    key: value for key, value in raw.items() if key not in known_keys
+                },
+            )
+        except (KeyError, ValueError) as exc:
+            raise InvalidTokenException(
+                message=f"Token payload is malformed: {exc}"
+            ) from exc
+
+
+def get_jwt_service() -> JWTService:
+    return JWTService()
