@@ -1,5 +1,5 @@
 from app.repositories import UserRepository
-from core.dependencies import Async_Session_Dep
+from core.dependencies.session import Async_Session_Dep
 
 
 class RepositoryFactory:

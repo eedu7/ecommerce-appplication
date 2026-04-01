@@ -1,6 +1,5 @@
-from .user import UserRepository, get_user_repository
+from .user import UserRepository
 
 __all__ = [
     "UserRepository",
-    "get_user_repository",
 ]

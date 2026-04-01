@@ -2,12 +2,12 @@ from fastapi import APIRouter, status
 
 from app.schemas.requests.auth import AuthIn
 from app.schemas.responses.auth import AuthOut
-from core.dependencies import Auth_Controller_Dep
+from core.dependencies.controller import Auth_Controller_Dep
 
 router = APIRouter()
 
 
-@router.get(
+@router.post(
     "/",
     status_code=status.HTTP_200_OK,
     response_model=AuthOut,

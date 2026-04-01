@@ -1,7 +1,7 @@
 from redis.asyncio import Redis
 
 from core.config import config
-from core.dependencies import Redis_Dep
+from core.dependencies.redis import Redis_Dep
 from core.redis import BaseRedisStore
 
 
