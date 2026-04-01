@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 
+from app.schemas.responses.user import UserOut
 from core.dependencies.auth import auth_required
+from core.dependencies.user import Current_User_Dep
 
 router = APIRouter(dependencies=[Depends(auth_required)])
 
 
-@router.get("/")
-async def get_user(request: Request):
-    return {
-        "uid": request.state.user.uid,
-    }
+@router.get(
+    "/",
+    response_model=UserOut,
+)
+async def get_user(current_user: Current_User_Dep):
+    return current_user
