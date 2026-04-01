@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 
 class PrimaryKeyMixin:
-    id: Mapped[UUID] = mapped_column(
+    uid: Mapped[UUID] = mapped_column(
         PG_UUID(),
         index=True,
         default=uuid4,
