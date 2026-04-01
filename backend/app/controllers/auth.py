@@ -34,6 +34,8 @@ class AuthController(BaseController[DBUser]):
             }
         )
 
+        await self.commit()
+
         token = self.jwt.build_token_pair(
             str(user.uid),
             extra_claims={"user": {"username": user.username, "email": user.email}},
