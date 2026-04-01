@@ -74,3 +74,8 @@ class AuthLogin(BaseModel):
             "Username can only contain letters, numbers, underscore (_), and hyphens (-)"
 
         return v
+
+
+class AuthLogout(BaseModel):
+    access_token: str | None = None
+    refresh_token: str | None = None

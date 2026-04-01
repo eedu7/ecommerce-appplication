@@ -1,15 +1,15 @@
-from fastapi import Response
+from fastapi import Request, Response
 
 from app.models import DBUser
 from app.repositories import UserRepository
-from app.schemas.requests.auth import AuthIn, AuthLogin
+from app.schemas.requests.auth import AuthIn, AuthLogin, AuthLogout
 from app.schemas.responses.auth import AuthOut
 from app.schemas.responses.user import UserOut
 from core.controller import BaseController
-from core.exceptions import UnauthorizedException
+from core.exceptions import BadRequestException, UnauthorizedException
 from core.security import JWTService
 from core.security.password import PasswordService
-from core.utils import set_auth_cookies
+from core.utils import delete_auth_cookies, set_auth_cookies
 
 
 class AuthController(BaseController[DBUser]):
@@ -74,3 +74,16 @@ class AuthController(BaseController[DBUser]):
         set_auth_cookies(token, response)
 
         return AuthOut(token=token, user=UserOut.model_validate(user))
+
+    async def logout(self, data: AuthLogout, request: Request) -> None:
+        if data.access_token is None:
+            data.access_token = request.cookies.get("ACCESS_TOKEN")
+        if data.refresh_token is None:
+            data.refresh_token = request.cookies.get("REFRESH_TOKEN")
+
+        payload = data.model_dump(exclude_none=True)
+        if not payload:
+            raise BadRequestException("No credentials provided")
+
+        await self.jwt.revoke_tokens(**payload)
+        delete_auth_cookies(request)

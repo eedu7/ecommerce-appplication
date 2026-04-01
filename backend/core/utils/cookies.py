@@ -35,5 +35,5 @@ def set_auth_cookies(
     )
 
 
-def delete_cookies(request: Request) -> None:
+def delete_auth_cookies(request: Request) -> None:
     request.cookies.clear()

@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Request, Response, status
 
-from app.schemas.requests.auth import AuthIn, AuthLogin
+from app.schemas.requests.auth import AuthIn, AuthLogin, AuthLogout
 from app.schemas.responses.auth import AuthOut
 from core.dependencies.controller import Auth_Controller_Dep
 
@@ -28,3 +28,15 @@ async def login(
     controller: Auth_Controller_Dep,
 ) -> AuthOut:
     return await controller.login(data, response)
+
+
+@router.post(
+    "/logout",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def logout(
+    request: Request,
+    data: AuthLogout,
+    controller: Auth_Controller_Dep,
+) -> None:
+    await controller.logout(data, request)
