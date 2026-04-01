@@ -2,7 +2,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import DBUser
-from core.dependencies import Session_Dep
+from core.dependencies import Async_Session_Dep
 from core.repository import BaseRepository
 
 
@@ -27,5 +27,5 @@ class UserRepository(BaseRepository[DBUser]):
         return result.scalars().first()
 
 
-def get_user_repository(session: Session_Dep) -> UserRepository:
+def get_user_repository(session: Async_Session_Dep) -> UserRepository:
     return UserRepository(session)
