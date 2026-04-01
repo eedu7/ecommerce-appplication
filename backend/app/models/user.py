@@ -1,8 +1,16 @@
-from sqlalchemy import Boolean, String
+from enum import StrEnum
+
+from sqlalchemy import Boolean, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.database import DBBase
 from core.database.mixins import PrimaryKeyMixin, TimestampMixin
+
+
+class DBUserRole(StrEnum):
+    ADMIN = "ADMIN"
+    CUSTOMER = "CUSTOMER"
+    VENDOR = "VENDOR"
 
 
 class DBUser(DBBase, PrimaryKeyMixin, TimestampMixin):
@@ -27,6 +35,11 @@ class DBUser(DBBase, PrimaryKeyMixin, TimestampMixin):
     password: Mapped[str] = mapped_column(
         String(256),
         nullable=True,
+    )
+    role: Mapped[DBUserRole] = mapped_column(
+        Enum(DBUserRole),
+        nullable=False,
+        default=DBUserRole.CUSTOMER,
     )
 
     def __repr__(self) -> str:
