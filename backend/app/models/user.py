@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from sqlalchemy import Boolean, Enum, String
+from sqlalchemy import BOOLEAN, Boolean, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.database import DBBase
@@ -40,6 +40,10 @@ class DBUser(DBBase, PrimaryKeyMixin, TimestampMixin):
         Enum(DBUserRole),
         nullable=False,
         default=DBUserRole.CUSTOMER,
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        server_default="true",
     )
 
     def __repr__(self) -> str:
