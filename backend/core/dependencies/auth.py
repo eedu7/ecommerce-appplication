@@ -1,8 +1,10 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.schemas.extra.current_user import CurrentUser
 from app.schemas.extra.token import TokenPayload
 from core.config import config
 from core.dependencies.security import JWT_Service_Dep
@@ -15,7 +17,7 @@ async def auth_required(
     credentials: Annotated[
         HTTPAuthorizationCredentials, Depends(HTTPBearer(auto_error=False))
     ],
-) -> TokenPayload:
+):
     if credentials:
         token = credentials.credentials
     else:
@@ -36,8 +38,8 @@ async def auth_required(
         raise UnauthorizedException(
             message="Token has been revoked", error_code="AUTH_TOKEN_REVOKED"
         )
-
-    return payload
+    current_user = CurrentUser(uid=UUID(payload.sub))
+    request.state.user = current_user
 
 
 Authentication_Required = Annotated[TokenPayload, Depends(auth_required)]
