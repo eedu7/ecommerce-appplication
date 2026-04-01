@@ -25,7 +25,3 @@ class UserRepository(BaseRepository[DBUser]):
         )
         result = await self.session.execute(stmt)
         return result.scalars().first()
-
-
-def get_user_repository(session: Async_Session_Dep) -> UserRepository:
-    return UserRepository(session)
