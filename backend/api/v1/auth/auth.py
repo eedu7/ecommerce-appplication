@@ -1,6 +1,5 @@
 from fastapi import APIRouter, status
 
-from app.models import DBUserRole
 from app.schemas.requests.auth import AuthIn
 from app.schemas.responses.auth import AuthOut
 from core.dependencies import Auth_Controller_Dep
@@ -14,4 +13,4 @@ router = APIRouter()
     response_model=AuthOut,
 )
 async def register(data: AuthIn, controller: Auth_Controller_Dep):
-    return await controller.register(data, DBUserRole.ADMIN)
+    return await controller.register(data)

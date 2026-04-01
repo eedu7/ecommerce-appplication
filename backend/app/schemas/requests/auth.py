@@ -2,6 +2,8 @@ import re
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
+from app.models import DBUserRole
+
 
 class AuthIn(BaseModel):
     username: str = Field(
@@ -16,6 +18,12 @@ class AuthIn(BaseModel):
     )
     password: str = Field(
         ..., min_length=8, description="Password", examples=["Password@123"]
+    )
+
+    role: DBUserRole = Field(
+        ...,
+        examples=[DBUserRole.CUSTOMER, DBUserRole.VENDOR, DBUserRole.ADMIN],
+        description="Role",
     )
 
     @field_validator("username")

@@ -1,4 +1,4 @@
-from app.models import DBUser, DBUserRole
+from app.models import DBUser
 from app.repositories import UserRepository
 from app.schemas.requests.auth import AuthIn
 from app.schemas.responses.auth import AuthOut
@@ -17,7 +17,7 @@ class AuthController(BaseController[DBUser]):
         self.jwt = jwt
         self.password = password
 
-    async def register(self, data: AuthIn, role: DBUserRole) -> AuthOut:
+    async def register(self, data: AuthIn) -> AuthOut:
         if await self.repository.get_by_email(data.email):
             raise
         if await self.repository.get_by_username(data.username):
@@ -30,7 +30,7 @@ class AuthController(BaseController[DBUser]):
                 "email": data.email,
                 "username": data.username,
                 "password": hashed_password,
-                "role": role,
+                "role": data.role,
             }
         )
 
