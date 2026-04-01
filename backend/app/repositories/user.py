@@ -2,7 +2,6 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import DBUser
-from core.dependencies import Async_Session_Dep
 from core.repository import BaseRepository
 
 
