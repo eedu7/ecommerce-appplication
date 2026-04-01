@@ -2,12 +2,24 @@
 
 version: '3'
 
-vars:
-  GREETING: Hello, world!
-
 tasks:
-  default:
-    desc: Print a greeting message
+  # Development
+  dev:
+    desc: Run development server with hot reload
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - uv run fastapi dev main.py
+
+  # Production
+  prod:
+    desc: Run production server
+    cmds:
+      - uv run fastapi run main.py
+
+  # Format
+  format:
+    desc: Lint and format the code
+    cmds:
+      - uv run ruff check --fix .
+      - uv run ruff format .
+
+
