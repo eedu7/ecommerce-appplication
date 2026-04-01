@@ -100,6 +100,14 @@ class Config(BaseSettings):
     COOKIE_DOMAIN: str | None = Field(
         None, description="Cookie domain. None = current domain only"
     )
+    COOKIE_ACCESS_TOKEN_KEY: str = Field(
+        "ACCESS_TOKEN",
+        description="Access token key",
+    )
+    COOKIE_REFRESH_TOKEN_KEY: str = Field(
+        "REFRESH_TOKEN",
+        description="Refresh token key",
+    )
 
     @computed_field
     @property

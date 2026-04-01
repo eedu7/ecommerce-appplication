@@ -5,6 +5,7 @@ from app.repositories import UserRepository
 from app.schemas.requests.auth import AuthIn, AuthLogin, AuthLogout
 from app.schemas.responses.auth import AuthOut
 from app.schemas.responses.user import UserOut
+from core.config import config
 from core.controller import BaseController
 from core.exceptions import BadRequestException, UnauthorizedException
 from core.security import JWTService
@@ -77,9 +78,9 @@ class AuthController(BaseController[DBUser]):
 
     async def logout(self, data: AuthLogout, request: Request) -> None:
         if data.access_token is None:
-            data.access_token = request.cookies.get("ACCESS_TOKEN")
+            data.access_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN_KEY)
         if data.refresh_token is None:
-            data.refresh_token = request.cookies.get("REFRESH_TOKEN")
+            data.refresh_token = request.cookies.get(config.COOKIE_REFRESH_TOKEN_KEY)
 
         payload = data.model_dump(exclude_none=True)
         if not payload:

@@ -23,14 +23,14 @@ def set_auth_cookies(
 ) -> None:
     _set_cookie(
         response,
-        "ACCESS_TOKEN",
+        config.COOKIE_ACCESS_TOKEN_KEY,
         data.access_token,
         int(timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES).total_seconds()),
     )
     _set_cookie(
         response,
-        "REFRESH_TOKEN",
-        data.access_token,
+        config.COOKIE_REFRESH_TOKEN_KEY,
+        data.refresh_token,
         int(timedelta(days=config.JWT_REFRESH_TOKEN_EXPIRE_DAYS).total_seconds()),
     )
 
