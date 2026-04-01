@@ -21,7 +21,7 @@ async def auth_required(
     if credentials:
         token = credentials.credentials
     else:
-        cookie_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN)
+        cookie_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN_KEY)
         if cookie_token:
             token = cookie_token
         else:
