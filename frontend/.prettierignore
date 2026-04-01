@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+dist/
+node_modules/
+.next/
+.turbo/
+coverage/
+pnpm-lock.yaml
+.pnpm-store/
