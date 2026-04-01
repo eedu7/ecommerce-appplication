@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from sqlalchemy import BOOLEAN, Boolean, Enum, String
+from sqlalchemy import Boolean, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.database import DBBase
