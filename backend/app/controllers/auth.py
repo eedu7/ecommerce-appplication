@@ -1,11 +1,15 @@
+from fastapi import Response
+
 from app.models import DBUser
 from app.repositories import UserRepository
-from app.schemas.requests.auth import AuthIn
+from app.schemas.requests.auth import AuthIn, AuthLogin
 from app.schemas.responses.auth import AuthOut
 from app.schemas.responses.user import UserOut
 from core.controller import BaseController
+from core.exceptions import UnauthorizedException
 from core.security import JWTService
 from core.security.password import PasswordService
+from core.utils import set_auth_cookies
 
 
 class AuthController(BaseController[DBUser]):
@@ -17,7 +21,7 @@ class AuthController(BaseController[DBUser]):
         self.jwt = jwt
         self.password = password
 
-    async def register(self, data: AuthIn) -> AuthOut:
+    async def register(self, data: AuthIn, response: Response) -> AuthOut:
         if await self.repository.get_by_email(data.email):
             raise
         if await self.repository.get_by_username(data.username):
@@ -40,5 +44,33 @@ class AuthController(BaseController[DBUser]):
             str(user.uid),
             extra_claims={"user": {"username": user.username, "email": user.email}},
         )
+
+        set_auth_cookies(token, response)
+
+        return AuthOut(token=token, user=UserOut.model_validate(user))
+
+    async def login(self, data: AuthLogin, response: Response) -> AuthOut:
+        user = await self.repository.get_by_username_or_email(data.username_or_email)
+
+        if user is None:
+            raise UnauthorizedException(
+                message="Invalid credentials",
+                error_code="INVALID_CREDENTIALS",
+            )
+
+        if user.password and not self.password.verify_password(
+            user.password, data.password
+        ):
+            raise UnauthorizedException(
+                message="Invalid credentials",
+                error_code="INVALID_CREDENTIALS",
+            )
+
+        token = self.jwt.build_token_pair(
+            str(user.uid),
+            extra_claims={"user": {"username": user.username, "email": user.email}},
+        )
+
+        set_auth_cookies(token, response)
 
         return AuthOut(token=token, user=UserOut.model_validate(user))
