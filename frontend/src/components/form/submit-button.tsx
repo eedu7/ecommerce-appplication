@@ -10,7 +10,7 @@ export const SubmitButton = ({ label, isPending = false }: { label: string; isPe
         <Field orientation="horizontal">
             <form.Subscribe selector={(state) => state.isSubmitting}>
                 {(isSubmitting) => (
-                    <Button type="submit" disabled={isSubmitting || isPending}>
+                    <Button type="submit" disabled={isSubmitting || isPending} className="w-full">
                         {isSubmitting || isPending ? <Spinner /> : label}
                     </Button>
                 )}
