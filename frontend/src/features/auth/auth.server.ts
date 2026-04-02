@@ -20,21 +20,21 @@ class AuthServer {
         return !!user;
     };
 
-    requireAuth = async () => {
+    requireAuth = async (redirectTo: string = "/login") => {
         const authenticated = await this.isAuthenticated();
 
         if (!authenticated) {
-            redirect("/login");
+            redirect(redirectTo);
         }
     };
 
-    requireUnAuth = async () => {
+    requireUnAuth = async (redirectTo: string = "/") => {
         const authenticated = await this.isAuthenticated();
 
         if (authenticated) {
             const _headers = await headers();
             const referer = _headers.get("referer");
-            redirect(referer || "/");
+            redirect(referer || redirectTo);
         }
     };
 }
