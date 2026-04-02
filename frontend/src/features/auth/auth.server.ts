@@ -1,22 +1,41 @@
 import { User } from "@/features/auth/auth.types";
 import { apiServerClient } from "@/lib/api/api.server";
-import { cookies } from "next/headers";
 import { cache } from "react";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 class AuthServer {
-    logout = cache(async (): Promise<void> => {
-        const cookieStore = await cookies();
-        await apiServerClient("/auth/logout", {
-            method: "POST",
-            body: JSON.stringify({
-                access_token: cookieStore.get("ACCESS_TOKEN"),
-                refresh_token: cookieStore.get("REFRESH_TOKEN"),
-            }),
-        });
+    currentUser = cache(async (): Promise<User | null> => {
+        return apiServerClient("/users");
     });
 
-    currentUser = async (): Promise<User | null> => {
-        return apiServerClient("/users");
+    logout = async (): Promise<void> => {
+        await apiServerClient("/auth/logout", {
+            method: "POST",
+        });
+    };
+
+    isAuthenticated = async (): Promise<boolean> => {
+        const user = await this.currentUser();
+        return !!user;
+    };
+
+    requireAuth = async () => {
+        const authenticated = await this.isAuthenticated();
+
+        if (!authenticated) {
+            redirect("/login");
+        }
+    };
+
+    requireUnAuth = async () => {
+        const authenticated = await this.isAuthenticated();
+
+        if (authenticated) {
+            const _headers = await headers();
+            const referer = _headers.get("referer");
+            redirect(referer || "/");
+        }
     };
 }
 
