@@ -4,8 +4,10 @@ import { useAppForm } from "@/hooks/use-app-form";
 import { revalidateLogic } from "@tanstack/form-core";
 import { registerUserSchema } from "@/features/auth/auth.schema";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 
 export const RegisterForm = () => {
+    const { register, isLoading } = useAuth();
     const form = useAppForm({
         defaultValues: {
             username: "",
@@ -18,7 +20,7 @@ export const RegisterForm = () => {
             onDynamic: registerUserSchema,
         },
         onSubmit: async ({ value }) => {
-            console.table(value);
+            await register(value);
         },
     });
 
@@ -77,7 +79,7 @@ export const RegisterForm = () => {
                     </FieldGroup>
                 </FieldSet>
                 <form.AppForm>
-                    <form.SubmitButton label="Register" isPending={false} />
+                    <form.SubmitButton label="Register" isPending={isLoading} />
                 </form.AppForm>
             </FieldGroup>
         </form>

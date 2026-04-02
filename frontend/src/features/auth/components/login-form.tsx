@@ -4,8 +4,10 @@ import { useAppForm } from "@/hooks/use-app-form";
 import { revalidateLogic } from "@tanstack/form-core";
 import { loginUserSchema } from "@/features/auth/auth.schema";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 
 export const LoginForm = () => {
+    const { login, isLoading } = useAuth();
     const form = useAppForm({
         defaultValues: {
             username_or_email: "",
@@ -16,7 +18,7 @@ export const LoginForm = () => {
             onDynamic: loginUserSchema,
         },
         onSubmit: async ({ value }) => {
-            console.table(value);
+            await login(value);
         },
     });
     return (
@@ -51,7 +53,7 @@ export const LoginForm = () => {
                     </FieldGroup>
                 </FieldSet>
                 <form.AppForm>
-                    <form.SubmitButton label="Login" isPending={false} />
+                    <form.SubmitButton label="Login" isPending={isLoading} />
                 </form.AppForm>
             </FieldGroup>
         </form>
