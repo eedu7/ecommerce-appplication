@@ -1,11 +1,15 @@
+"use client";
 import { ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthContext, AuthContextType } from "@/features/auth/context/auth-context";
 import { LoginUserSchema, RegisterUserSchema } from "@/features/auth/auth.schema";
 import { AuthResponse, User } from "@/features/auth/auth.types";
+import { useRouter } from "next/navigation";
+import { apiBrowserClient } from "@/lib/api/api.client";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     const {
         data: user,
@@ -26,45 +30,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         retry: false,
     });
 
+    const onSuccess = (data: AuthResponse) => {
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        queryClient.setQueryData(["currentUser"], data.user);
+        router.push("/");
+    };
+
     const loginMutation = useMutation<AuthResponse, Error, LoginUserSchema>({
-        mutationFn: async (data) => {
-            return {
-                user: {
-                    uid: "hello",
-                    email: "email",
-                    username: "username",
-                    role: "ADMIN",
-                },
-                token: {
-                    access_token: "access_token",
-                    refresh_token: "refresh_token",
-                    token_type: "Bearer",
-                    expires_in: 0,
-                },
-            };
-        },
+        mutationFn: async (data) =>
+            apiBrowserClient("/auth/login", {
+                method: "POST",
+                body: JSON.stringify(data),
+            }),
+        onSuccess,
     });
+
     const registerMutation = useMutation<AuthResponse, Error, RegisterUserSchema>({
-        mutationFn: async (data) => {
-            return {
-                user: {
-                    uid: "hello",
-                    email: "email",
-                    username: "username",
-                    role: "ADMIN",
-                },
-                token: {
-                    access_token: "access_token",
-                    refresh_token: "refresh_token",
-                    token_type: "Bearer",
-                    expires_in: 0,
-                },
-            };
-        },
+        mutationFn: async (data) =>
+            apiBrowserClient("/auth/", {
+                method: "POST",
+                body: JSON.stringify(data),
+            }),
+        onSuccess,
     });
 
     const logoutMutation = useMutation<void, Error>({
-        mutationFn: async () => {},
+        mutationFn: async () =>
+            apiBrowserClient("/auth/logout", {
+                method: "POST",
+            }),
         onSuccess: () => {
             queryClient.setQueryData(["currentUser"], null);
             queryClient.clear();
