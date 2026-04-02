@@ -1,13 +1,22 @@
 import { User } from "@/features/auth/auth.types";
 import { apiServerClient } from "@/lib/api/api.server";
-import { cache } from "react";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { ApiError } from "@/lib/api/api.error";
 
 class AuthServer {
-    currentUser = cache(async (): Promise<User | null> => {
-        return apiServerClient("/users");
-    });
+    currentUser = async (): Promise<User | null> => {
+        try {
+            return await apiServerClient("/users/me", {
+                method: "GET",
+            });
+        } catch (error) {
+            if (error instanceof ApiError && error.status >= 400 && error.status < 600) {
+                return null;
+            }
+            throw error;
+        }
+    };
 
     logout = async (): Promise<void> => {
         await apiServerClient("/auth/logout", {
