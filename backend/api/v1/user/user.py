@@ -8,7 +8,7 @@ router = APIRouter(dependencies=[Depends(auth_required)])
 
 
 @router.get(
-    "/",
+    "/me",
     response_model=UserOut,
 )
 async def get_user(current_user: Current_User_Dep):

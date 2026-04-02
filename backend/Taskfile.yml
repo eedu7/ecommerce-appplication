@@ -10,7 +10,7 @@ tasks:
       - uv run fastapi dev main.py
 
   # Production
-  prod:
+  run:
     desc: Run production server
     cmds:
       - uv run fastapi run main.py
