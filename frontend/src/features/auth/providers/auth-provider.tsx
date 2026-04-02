@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const onSuccess = (data: AuthResponse) => {
         localStorage.setItem("userData", JSON.stringify(data.user));
         queryClient.setQueryData(["currentUser"], data.user);
-        router.push("/");
+        router.replace("/");
     };
 
     const loginMutation = useMutation<AuthResponse, Error, LoginUserSchema>({
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         mutationFn: async (data) =>
             apiBrowserClient("/auth/", {
                 method: "POST",
-                body: JSON.stringify(data),
+                body: JSON.stringify({ ...data, role: "CUSTOMER" }),
             }),
         onSuccess,
     });
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         onSuccess: () => {
             queryClient.setQueryData(["currentUser"], null);
             queryClient.clear();
+            router.replace("/");
         },
     });
 
