@@ -1,4 +1,4 @@
-type UserRole = "ADMIN" | "CUSTOMER" | "VENDOR";
+export type UserRole = "ADMIN" | "CUSTOMER" | "VENDOR";
 
 export type User = {
     uid: string;

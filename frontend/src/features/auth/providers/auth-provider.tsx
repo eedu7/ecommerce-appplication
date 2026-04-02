@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const value: AuthContextType = {
         user,
         isAuthenticated: !!user,
+        userRole: user ? user.role : "GUEST",
         isLoading: isLoading || loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
         error: error || loginMutation.error || registerMutation.error || logoutMutation.error,
         login,
