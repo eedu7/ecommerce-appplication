@@ -19,6 +19,6 @@ def run_server() -> FastAPI:
     app_ = FastAPI(
         title="ECommerce Application",
     )
-    app_.include_router(router)
+    app_.include_router(router, prefix="/api")
     make_middleware(app_)
     return app_

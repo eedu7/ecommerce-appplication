@@ -51,9 +51,10 @@ class AuthController(BaseController[DBUser]):
         return AuthOut(token=token, user=UserOut.model_validate(user))
 
     async def login(self, data: AuthLogin, response: Response) -> AuthOut:
-        user = await self.repository.get_by_username_or_email(data.username_or_email)
 
+        user = await self.repository.get_by_username_or_email(data.username_or_email)
         if user is None:
+            print("User", user)
             raise UnauthorizedException(
                 message="Invalid credentials",
                 error_code="INVALID_CREDENTIALS",
@@ -62,6 +63,7 @@ class AuthController(BaseController[DBUser]):
         if user.password and not self.password.verify_password(
             user.password, data.password
         ):
+            print("Password not matched")
             raise UnauthorizedException(
                 message="Invalid credentials",
                 error_code="INVALID_CREDENTIALS",

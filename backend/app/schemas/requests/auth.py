@@ -64,6 +64,7 @@ class AuthLogin(BaseModel):
     @field_validator("username_or_email")
     @classmethod
     def validate_username_or_email(cls, v: str) -> str:
+        v = v.strip()
         try:
             EmailStr(v)
             return v
