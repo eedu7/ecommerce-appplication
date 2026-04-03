@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, String
@@ -24,11 +24,12 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
     parent_id: Mapped[UUID | None] = mapped_column(
         ForeignKey(
             "categories.uid",
-            onupdate="SET NULL",
+            ondelete="CASCADE",
         ),
         nullable=True,
+        index=True,
     )
-    parent: Mapped["DBCategory" | None] = relationship(
+    parent: Mapped[Optional["DBCategory"]] = relationship(
         "DBCategory",
         remote_side="DBCategory.uid",
         back_populates="children",
