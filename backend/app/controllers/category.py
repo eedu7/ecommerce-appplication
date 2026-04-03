@@ -60,6 +60,7 @@ class CategoryController(BaseController[DBCategory]):
 
         await self.repository.update(category, data.model_dump(exclude_none=True))
         await self.commit()
+        await self.refresh(category)
         return category
 
     async def delete(self, uid: UUID) -> None:

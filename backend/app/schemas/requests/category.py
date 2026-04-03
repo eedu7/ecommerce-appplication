@@ -12,7 +12,7 @@ class CategoryIn(BaseModel):
 class CategoryUpdate(BaseModel):
     name: str
     description: str
-    parent_id: UUID
+    parent_id: UUID | None = None
 
 
 class CategoryPartialUpdate(CategoryIn):
