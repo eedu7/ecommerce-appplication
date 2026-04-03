@@ -5,8 +5,8 @@ import { apiBrowserClient } from "@/lib/api/api.client";
 
 export const useCreateCategory = (): UseMutationResult<Category, Error, CreateCategorySchema> =>
     useMutation({
-        mutationFn: async (data) =>
-            await apiBrowserClient("/categories", {
+        mutationFn: async (data): Promise<Category> =>
+            apiBrowserClient("/categories", {
                 method: "POST",
                 body: JSON.stringify(data),
             }),
