@@ -1,3 +1,10 @@
+import { CategoryDataTable } from "@/features/category/components/category-data-table";
+import { categoryColumns } from "@/features/category/components/category-columns";
+
 export const CategoryPage = () => {
-    return <h1>Category Page</h1>;
+    return (
+        <main>
+            <CategoryDataTable columns={categoryColumns} data={[]} />
+        </main>
+    );
 };
