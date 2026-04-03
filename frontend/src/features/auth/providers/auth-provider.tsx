@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthContext, AuthContextType } from "@/features/auth/context/auth-context";
 import { LoginUserSchema, RegisterUserSchema } from "@/features/auth/auth.schema";
@@ -70,30 +70,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
     });
 
-    const login = async (credentials: LoginUserSchema) => {
-        return loginMutation.mutateAsync(credentials);
-    };
-    const register = async (credentials: RegisterUserSchema) => {
-        return registerMutation.mutateAsync(credentials);
-    };
-    const logout = async () => {
+    const login = useCallback(
+        async (credentials: LoginUserSchema) => {
+            return loginMutation.mutateAsync(credentials);
+        },
+        [loginMutation]
+    );
+
+    const register = useCallback(
+        async (credentials: RegisterUserSchema) => {
+            return registerMutation.mutateAsync(credentials);
+        },
+        [registerMutation]
+    );
+
+    const logout = useCallback(async () => {
         return logoutMutation.mutateAsync();
-    };
+    }, [logoutMutation]);
 
-    const refetch = async (): Promise<void> => {
+    const refetch = useCallback(async (): Promise<void> => {
         await refetchUser();
-    };
+    }, [refetchUser]);
 
-    const value: AuthContextType = {
-        user,
-        isAuthenticated: !!user,
-        userRole: user ? user.role : "GUEST",
-        isLoading: isLoading || loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
-        error: error || loginMutation.error || registerMutation.error || logoutMutation.error,
-        login,
-        register,
-        logout,
-        refetchUser: refetch,
-    };
+    // Memoize the context value to prevent unnecessary re-renders
+    const value: AuthContextType = useMemo(
+        () => ({
+            user,
+            isAuthenticated: !!user,
+            userRole: user ? user.role : "GUEST",
+            isLoading: isLoading || loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
+            error: error || loginMutation.error || registerMutation.error || logoutMutation.error,
+            login,
+            register,
+            logout,
+            refetchUser: refetch,
+        }),
+        [
+            user,
+            isLoading,
+            loginMutation.isPending,
+            loginMutation.error,
+            registerMutation.isPending,
+            registerMutation.error,
+            logoutMutation.isPending,
+            logoutMutation.error,
+            error,
+            login,
+            register,
+            logout,
+            refetch,
+        ]
+    );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
