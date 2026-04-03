@@ -3,6 +3,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 
 from core.dependencies.auth import auth_required
+from core.dependencies.get_role import admin_required
+from core.dependencies.user import Current_User_Dep
 
 router = APIRouter()
 
@@ -21,25 +23,25 @@ async def get_categories():
 
 @router.post(
     "/",
-    dependencies=[Depends(auth_required)],
+    dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def create():
+async def create(current_user: Current_User_Dep):
     pass
 
 
 @router.put(
     "/",
-    dependencies=[Depends(auth_required)],
+    dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def update():
+async def update(current_user: Current_User_Dep):
     pass
 
 
 @router.patch(
     "/",
-    dependencies=[Depends(auth_required)],
+    dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def partial_update():
+async def partial_update(current_user: Current_User_Dep):
     pass
 
 
@@ -47,5 +49,5 @@ async def partial_update():
     "/",
     dependencies=[Depends(auth_required)],
 )
-async def delete():
+async def delete(current_user: Current_User_Dep):
     pass

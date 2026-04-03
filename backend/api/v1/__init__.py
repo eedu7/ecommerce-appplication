@@ -1,6 +1,4 @@
-from fastapi import APIRouter, Depends
-
-from core.dependencies.auth import auth_required
+from fastapi import APIRouter
 
 from .auth import router as auth_router
 from .category import router as category_router

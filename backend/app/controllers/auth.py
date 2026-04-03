@@ -54,7 +54,6 @@ class AuthController(BaseController[DBUser]):
 
         user = await self.repository.get_by_username_or_email(data.username_or_email)
         if user is None:
-            print("User", user)
             raise UnauthorizedException(
                 message="Invalid credentials",
                 error_code="INVALID_CREDENTIALS",
@@ -63,7 +62,6 @@ class AuthController(BaseController[DBUser]):
         if user.password and not self.password.verify_password(
             user.password, data.password
         ):
-            print("Password not matched")
             raise UnauthorizedException(
                 message="Invalid credentials",
                 error_code="INVALID_CREDENTIALS",
@@ -89,11 +87,7 @@ class AuthController(BaseController[DBUser]):
             refresh_token = request.cookies.get(config.COOKIE_REFRESH_TOKEN_KEY)
 
         if not access_token or not refresh_token:
-            print("Hello-World")
             raise BadRequestException("No credentials provided")
 
-        print("STEP - 01")
-
         await self.jwt.revoke_tokens(access_token, refresh_token)
-        print("STEP - 02")
         delete_auth_cookies(response)
