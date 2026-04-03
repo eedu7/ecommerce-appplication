@@ -1,15 +1,6 @@
-from typing import Annotated
-
-from fastapi.params import Depends
-
 from app.controllers import AuthController, UserController
-from app.repositories import UserRepository
+from core.dependencies.repository import User_Repository_Dep
 from core.dependencies.security import JWT_Service_Dep, Password_Service_Dep
-from core.factory.repository import RepositoryFactory
-
-User_Repository_Dep = Annotated[
-    UserRepository, Depends(RepositoryFactory.get_user_repository)
-]
 
 
 class ControllerFactory:
