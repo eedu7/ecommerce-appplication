@@ -1,19 +1,69 @@
-import { Sidebar, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { LayoutGridIcon, LucideIcon, ShoppingBagIcon } from "lucide-react";
+import Link from "next/link";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+interface DashboardSidebarContentItemProps {
+    title: string;
+    icon: LucideIcon;
+    href: string;
+}
+
+const items: DashboardSidebarContentItemProps[] = [
+    {
+        title: "Category",
+        icon: LayoutGridIcon,
+        href: "/dashboard/category",
+    },
+    {
+        title: "Product",
+        icon: ShoppingBagIcon,
+        href: "/dashboard/product",
+    },
+];
 
 export const DashboardSidebar = () => {
     return (
-        <Sidebar collapsible="icon">
-            <DashboardSidebarHeader />
-        </Sidebar>
+        <TooltipProvider>
+            <Sidebar collapsible="icon">
+                <SidebarHeader>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarTrigger />
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarHeader>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>Content</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {items.map(({ title, icon: Icon, href }) => (
+                                    <SidebarMenuItem key={href}>
+                                        <Link href={href}>
+                                            <SidebarMenuButton tooltip={title}>
+                                                <Icon />
+                                                {title}
+                                            </SidebarMenuButton>
+                                        </Link>
+                                    </SidebarMenuItem>
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                </SidebarContent>
+            </Sidebar>
+        </TooltipProvider>
     );
 };
-
-const DashboardSidebarHeader = () => (
-    <SidebarHeader>
-        <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarTrigger />
-            </SidebarMenuItem>
-        </SidebarMenu>
-    </SidebarHeader>
-);

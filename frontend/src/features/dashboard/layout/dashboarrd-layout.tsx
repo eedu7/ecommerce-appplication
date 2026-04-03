@@ -11,7 +11,9 @@ export const DashboardLayout = async ({ children }: { children: ReactNode }) => 
     return (
         <SidebarProvider>
             <DashboardSidebar />
-            <SidebarInset>{children}</SidebarInset>
+            <SidebarInset>
+                <main>{children}</main>
+            </SidebarInset>
         </SidebarProvider>
     );
 };
