@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends
 
 from core.dependencies.auth import auth_required
 
-auth_router = APIRouter(dependencies=[Depends(auth_required)])
 router = APIRouter()
 
 
@@ -20,21 +19,33 @@ async def get_categories():
     pass
 
 
-@auth_router.post("/")
+@router.post(
+    "/",
+    dependencies=[Depends(auth_required)],
+)
 async def create():
     pass
 
 
-@auth_router.put("/")
+@router.put(
+    "/",
+    dependencies=[Depends(auth_required)],
+)
 async def update():
     pass
 
 
-@auth_router.patch("/")
+@router.patch(
+    "/",
+    dependencies=[Depends(auth_required)],
+)
 async def partial_update():
     pass
 
 
-@auth_router.delete("/")
+@router.delete(
+    "/",
+    dependencies=[Depends(auth_required)],
+)
 async def delete():
     pass
