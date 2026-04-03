@@ -5,11 +5,11 @@ from pydantic import BaseModel, ConfigDict
 
 
 class CategoryOut(BaseModel):
-    uuid: UUID
+    uid: UUID
     name: str
     description: str
     parent_id: UUID | None = None
-    children: List["CategoryOut"] = []
+    children: List["CategoryOut"] | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

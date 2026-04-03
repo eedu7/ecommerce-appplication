@@ -29,12 +29,26 @@ class CategoryController(BaseController[DBCategory]):
         return category
 
     async def create(self, data: CategoryIn) -> DBCategory:
+        existing = await self.repository.get_by_name(data.name)
 
-        if await self.repository.get_by_name(data.name):
-            raise DuplicateValueException()
+        if existing:
+            raise DuplicateValueException(
+                message=f"Category with name '{data.name}' already exists",
+                error_code="DuplicateCategoryName",
+            )
 
-        category = await self.create(**data.model_dump(exclude_none=True))
+        if data.parent_id:
+            parent = await self.repository.get_by_uid(data.parent_id)
+            if not parent:
+                raise NotFoundException(
+                    message="Parent category not found",
+                    error_code="ParentCategoryNotFound",
+                )
+
+        category = await self.repository.create(data.model_dump(exclude_none=True))
         await self.commit()
+        await self.flush()
+        await self.refresh(category)
         return category
 
     async def update(
