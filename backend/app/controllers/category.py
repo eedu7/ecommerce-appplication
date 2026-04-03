@@ -19,6 +19,15 @@ class CategoryController(BaseController[DBCategory]):
         super().__init__(DBCategory, repository)
         self.repository = repository
 
+    async def get_by_uid(self, uid: UUID) -> DBCategory:
+        category = await self.repository.get_by_uid(uid)
+        if category is None:
+            raise NotFoundException(
+                message="Category not found",
+                error_code="CategoryNotFound",
+            )
+        return category
+
     async def create(self, data: CategoryIn) -> DBCategory:
 
         if await self.repository.get_by_name(data.name):

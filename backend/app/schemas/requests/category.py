@@ -1,5 +1,3 @@
-from tkinter.scrolledtext import example
-
 from pydantic import BaseModel, Field
 
 
