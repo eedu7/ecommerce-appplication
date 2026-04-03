@@ -51,10 +51,7 @@ export const CreateCategoryForm = () => {
                                 />
                             )}
                         />
-                        <form.AppField
-                            name="parent_id"
-                            children={(field) => <field.TextField label="Parent" name="parent_id" />}
-                        />
+                        <form.AppField name="parent_id" children={(field) => <field.CategorySelectField />} />
                     </FieldGroup>
                 </FieldSet>
                 <form.AppForm>
