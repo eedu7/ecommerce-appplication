@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fastapi import Request, Response
+from fastapi import Response
 
 from app.schemas.extra.token import Token
 from core.config import config
@@ -35,5 +35,6 @@ def set_auth_cookies(
     )
 
 
-def delete_auth_cookies(request: Request) -> None:
-    request.cookies.clear()
+def delete_auth_cookies(response: Response) -> None:
+    response.delete_cookie(config.COOKIE_ACCESS_TOKEN_KEY)
+    response.delete_cookie(config.COOKIE_REFRESH_TOKEN_KEY)

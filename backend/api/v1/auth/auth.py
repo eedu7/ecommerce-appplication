@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, Depends, Request, Response, status
 
 from app.schemas.requests.auth import AuthIn, AuthLogin, AuthLogout
 from app.schemas.responses.auth import AuthOut
+from core.dependencies.auth import auth_required
 from core.dependencies.controller import Auth_Controller_Dep
 
 router = APIRouter()
@@ -32,11 +33,16 @@ async def login(
 
 @router.post(
     "/logout",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(auth_required)],
 )
 async def logout(
     request: Request,
+    response: Response,
     data: AuthLogout,
     controller: Auth_Controller_Dep,
-) -> None:
-    await controller.logout(data, request)
+):
+    await controller.logout(data, request, response)
+    return {
+        "message": "You have been logged out",
+    }

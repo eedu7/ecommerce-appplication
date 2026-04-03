@@ -78,15 +78,22 @@ class AuthController(BaseController[DBUser]):
 
         return AuthOut(token=token, user=UserOut.model_validate(user))
 
-    async def logout(self, data: AuthLogout, request: Request) -> None:
-        if data.access_token is None:
-            data.access_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN_KEY)
-        if data.refresh_token is None:
-            data.refresh_token = request.cookies.get(config.COOKIE_REFRESH_TOKEN_KEY)
+    async def logout(
+        self, data: AuthLogout, request: Request, response: Response
+    ) -> None:
+        access_token = data.access_token
+        refresh_token = data.refresh_token
+        if not access_token:
+            access_token = request.cookies.get(config.COOKIE_ACCESS_TOKEN_KEY)
+        if not refresh_token:
+            refresh_token = request.cookies.get(config.COOKIE_REFRESH_TOKEN_KEY)
 
-        payload = data.model_dump(exclude_none=True)
-        if not payload:
+        if not access_token or not refresh_token:
+            print("Hello-World")
             raise BadRequestException("No credentials provided")
 
-        await self.jwt.revoke_tokens(**payload)
-        delete_auth_cookies(request)
+        print("STEP - 01")
+
+        await self.jwt.revoke_tokens(access_token, refresh_token)
+        print("STEP - 02")
+        delete_auth_cookies(response)
