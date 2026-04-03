@@ -11,8 +11,8 @@ export const CreateCategoryForm = () => {
     const form = useAppForm({
         defaultValues: {
             name: "",
-            description: null,
-            parent_id: null,
+            description: "",
+            parent_id: "",
         },
         validationLogic: revalidateLogic(),
         validators: {
@@ -39,6 +39,21 @@ export const CreateCategoryForm = () => {
                             children={(field) => (
                                 <field.TextField label="Name" name="name" autoCapitalize="on" spellCheck="true" />
                             )}
+                        />
+                        <form.AppField
+                            name="description"
+                            children={(field) => (
+                                <field.TextField
+                                    label="Description"
+                                    name="description"
+                                    autoCapitalize="sentences"
+                                    spellCheck="true"
+                                />
+                            )}
+                        />
+                        <form.AppField
+                            name="parent_id"
+                            children={(field) => <field.TextField label="Parent" name="parent_id" />}
                         />
                     </FieldGroup>
                 </FieldSet>
