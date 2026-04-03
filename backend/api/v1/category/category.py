@@ -2,10 +2,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
+from app.schemas.requests.category import CategoryIn
 from core.dependencies.auth import auth_required
 from core.dependencies.controller import Category_Controller_Dep
 from core.dependencies.get_role import admin_required
-from core.dependencies.user import Current_User_Dep
 
 router = APIRouter()
 
@@ -26,31 +26,29 @@ async def get_categories(controller: Category_Controller_Dep):
     "/",
     dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def create(current_user: Current_User_Dep, controller: Category_Controller_Dep):
-    pass
+async def create(data: CategoryIn, controller: Category_Controller_Dep):
+    return await controller.create(data)
 
 
 @router.put(
-    "/",
+    "/{uid}",
     dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def update(current_user: Current_User_Dep, controller: Category_Controller_Dep):
+async def update(uid: UUID, controller: Category_Controller_Dep):
     pass
 
 
 @router.patch(
-    "/",
+    "/{uid}",
     dependencies=[Depends(auth_required), Depends(admin_required)],
 )
-async def partial_update(
-    current_user: Current_User_Dep, controller: Category_Controller_Dep
-):
+async def partial_update(uid: UUID, controller: Category_Controller_Dep):
     pass
 
 
 @router.delete(
-    "/",
+    "/{uid}",
     dependencies=[Depends(auth_required)],
 )
-async def delete(current_user: Current_User_Dep, controller: Category_Controller_Dep):
+async def delete(uid: UUID, controller: Category_Controller_Dep):
     pass
