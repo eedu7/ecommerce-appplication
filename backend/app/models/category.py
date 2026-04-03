@@ -38,7 +38,7 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
         "DBCategory",
         back_populates="parent",
         cascade="all, delete-orphan",
-        # single_parent=True,
+        single_parent=True,
         lazy="selectin",
     )
 

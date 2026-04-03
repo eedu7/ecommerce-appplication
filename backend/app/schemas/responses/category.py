@@ -7,9 +7,9 @@ from pydantic import BaseModel, ConfigDict
 class CategoryOut(BaseModel):
     uid: UUID
     name: str
-    description: str
+    description: str | None = None
     parent_id: UUID | None = None
-    children: List["CategoryOut"] | None = None
+    children: List["CategoryOut"] = []
 
     model_config = ConfigDict(from_attributes=True)
 
