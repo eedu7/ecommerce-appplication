@@ -1,5 +1,5 @@
-from app.controllers import AuthController, UserController
-from core.dependencies.repository import User_Repository_Dep
+from app.controllers import AuthController, CategoryController, UserController
+from core.dependencies.repository import Category_Repository_Dep, User_Repository_Dep
 from core.dependencies.security import JWT_Service_Dep, Password_Service_Dep
 
 
@@ -15,3 +15,9 @@ class ControllerFactory:
     @staticmethod
     def get_user_controller(repository: User_Repository_Dep) -> UserController:
         return UserController(repository)
+
+    @staticmethod
+    def get_category_controller(
+        repository: Category_Repository_Dep,
+    ) -> CategoryController:
+        return CategoryController(repository)
