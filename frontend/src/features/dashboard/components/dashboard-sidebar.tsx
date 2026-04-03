@@ -10,7 +10,7 @@ import {
     SidebarMenuItem,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LayoutGridIcon, LucideIcon, ShoppingBagIcon } from "lucide-react";
+import { LayoutDashboardIcon, LucideIcon, PackageIcon, ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -22,8 +22,13 @@ interface DashboardSidebarContentItemProps {
 
 const items: DashboardSidebarContentItemProps[] = [
     {
+        title: "Home",
+        icon: LayoutDashboardIcon,
+        href: "/dashboard",
+    },
+    {
         title: "Category",
-        icon: LayoutGridIcon,
+        icon: PackageIcon,
         href: "/dashboard/category",
     },
     {
@@ -46,7 +51,7 @@ export const DashboardSidebar = () => {
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarGroup>
-                        <SidebarGroupLabel>Content</SidebarGroupLabel>
+                        <SidebarGroupLabel>Catalog</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 {items.map(({ title, icon: Icon, href }) => (
