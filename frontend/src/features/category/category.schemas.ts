@@ -3,19 +3,19 @@ import z from "zod";
 export const createCategorySchema = z.object({
     name: z.string(),
     description: z.string().nullable(),
-    parentId: z.uuidv4().nullable(),
+    parent_id: z.uuidv4().nullable(),
 });
 
 export const updateCategorySchema = z.object({
     name: z.string(),
     description: z.string(),
-    parentId: z.uuidv4().nullable(),
+    parent_id: z.uuidv4().nullable(),
 });
 
 export const partialUpdateCategorySchema = z.object({
     name: z.string().nullable(),
     description: z.string().nullable(),
-    parentId: z.uuidv4().nullable(),
+    parent_id: z.uuidv4().nullable(),
 });
 
 export type CreateCategorySchema = z.infer<typeof createCategorySchema>;
