@@ -3,30 +3,31 @@ import { apiServerClient } from "@/lib/api/api.server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { ApiError } from "@/lib/api/api.error";
+import { cache } from "react";
 
 class AuthServer {
-    currentUser = async (): Promise<User | null> => {
+    currentUser = cache(async (): Promise<User | null> => {
         try {
             return await apiServerClient("/users/me", {
                 method: "GET",
             });
         } catch (error) {
-            if (error instanceof ApiError && error.status >= 400 && error.status < 600) {
+            if (error instanceof ApiError) {
                 return null;
             }
             throw error;
         }
-    };
-
-    logout = async (): Promise<void> => {
-        await apiServerClient("/auth/logout", {
-            method: "POST",
-        });
-    };
+    });
 
     isAuthenticated = async (): Promise<boolean> => {
         const user = await this.currentUser();
         return !!user;
+    };
+
+    isAdmin = async (): Promise<boolean> => {
+        const user = await this.currentUser();
+        if (!user) return false;
+        return user.role === "ADMIN";
     };
 
     requireAuth = async (redirectTo: string = "/login") => {

@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const loginMutation = useMutation<AuthResponse, Error, LoginUserSchema>({
         mutationFn: async (data) =>
-            apiBrowserClient("/auth/login", {
+            await apiBrowserClient("/auth/login", {
                 method: "POST",
                 body: JSON.stringify(data),
             }),
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const registerMutation = useMutation<AuthResponse, Error, RegisterUserSchema>({
         mutationFn: async (data) =>
-            apiBrowserClient("/auth/", {
+            await apiBrowserClient("/auth/", {
                 method: "POST",
                 body: JSON.stringify({ ...data, role: "CUSTOMER" }),
             }),
@@ -56,13 +56,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logoutMutation = useMutation<void, Error>({
         mutationFn: async () =>
-            apiBrowserClient("/auth/logout", {
+            await apiBrowserClient("/auth/logout", {
                 method: "POST",
+                body: JSON.stringify({
+                    access_token: "",
+                    refresh_token: "",
+                }),
             }),
         onSuccess: () => {
             queryClient.setQueryData(["currentUser"], null);
             queryClient.clear();
-            router.replace("/");
+            router.replace("/login");
         },
     });
 
