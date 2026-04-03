@@ -1,6 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Category } from "@/features/category/category.types";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
 
 export const categoryColumns: ColumnDef<Category>[] = [
     {
@@ -49,6 +57,33 @@ export const categoryColumns: ColumnDef<Category>[] = [
             const parent = allData.find((cat) => cat.uid === parentId);
 
             return parent ? parent.name : "-";
+        },
+    },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const category = row.original;
+
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="size-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontalIcon className="size-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                            <PenIcon />
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive">
+                            <TrashIcon />
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
         },
     },
 ];
