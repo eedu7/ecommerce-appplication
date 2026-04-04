@@ -1,22 +1,18 @@
 "use client";
 
-import { useFieldContext } from "@/context/form"
-import { useStore } from "@tanstack/react-form"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { InputHTMLAttributes, JSX } from "react"
-import { FormFieldError } from "./form-field-error"
+import { useFieldContext } from "@/context/form";
+import { useStore } from "@tanstack/react-form";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { InputHTMLAttributes, JSX } from "react";
+import { FormFieldError } from "./form-field-error";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     required?: boolean;
 }
 
-export const TextField = ({
-                              label,
-                              required = false,
-                              ...props
-                          }: Props): JSX.Element => {
+export const TextField = ({ label, required = false, ...props }: Props): JSX.Element => {
     const field = useFieldContext<string>();
 
     const errors = useStore(field.store, (state) => state.meta.errors);

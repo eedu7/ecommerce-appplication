@@ -22,4 +22,10 @@ tasks:
       - uv run ruff check --fix .
       - uv run ruff format .
 
+  # Migrate
+  migrate:
+    desc: Database migration
+    cmds:
+      - uv run alembic upgrade head
+
 

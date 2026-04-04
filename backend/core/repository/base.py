@@ -4,9 +4,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import config
 from core.database import DBBase
-from core.utils import validate_pagination
 
 T = TypeVar("T", bound=DBBase)
 
@@ -19,29 +17,22 @@ class BaseRepository(Generic[T]):
     async def get_by_uid(self, uid: UUID) -> T | None:
         return await self.session.get(self.model, uid)
 
-    async def get_all(self, skip: int = 0, limit: int | None = None) -> Sequence[T]:
-        if limit is None:
-            limit = config.DEFAULT_PAGE_SIZE
-        validate_pagination(skip, limit)
-        return await self.get_by_filters(skip=skip, limit=limit)
+    async def get_all(self, offset: int = 0, limit: int = 20) -> Sequence[T]:
+
+        return await self.get_by_filters(offset=offset, limit=limit)
 
     async def get_by_filters(
         self,
-        skip: int = 0,
-        limit: int | None = None,
+        offset: int = 0,
+        limit: int = 20,
         filters: Dict[str, Any] | None = None,
     ) -> Sequence[T]:
-
-        if limit is None:
-            limit = config.DEFAULT_PAGE_SIZE
-
-        validate_pagination(skip, limit)
 
         stmt = select(self.model)
 
         stmt = self._apply_filters(stmt, filters)
 
-        stmt = stmt.offset(skip).limit(limit)
+        stmt = stmt.offset(offset).limit(limit)
 
         result = await self.session.execute(stmt)
         return result.scalars().all()

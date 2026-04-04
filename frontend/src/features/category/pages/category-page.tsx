@@ -1,3 +1,9 @@
+import { CategoryDataTable } from "@/features/category/components/category-data-table";
+
 export const CategoryPage = () => {
-    return <h1>Category Page</h1>;
+    return (
+        <main className="flex flex-col gap-12">
+            <CategoryDataTable />
+        </main>
+    );
 };
