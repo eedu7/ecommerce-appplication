@@ -1,6 +1,7 @@
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -13,6 +14,7 @@ import {
 import { LayoutDashboardIcon, LucideIcon, PackageIcon, ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SidebarUserButton } from "@/features/dashboard/components/sidebar-user-button";
 
 interface DashboardSidebarContentItemProps {
     title: string;
@@ -68,6 +70,11 @@ export const DashboardSidebar = () => {
                         </SidebarGroupContent>
                     </SidebarGroup>
                 </SidebarContent>
+                <SidebarFooter>
+                    <SidebarMenu>
+                        <SidebarUserButton />
+                    </SidebarMenu>
+                </SidebarFooter>
             </Sidebar>
         </TooltipProvider>
     );
