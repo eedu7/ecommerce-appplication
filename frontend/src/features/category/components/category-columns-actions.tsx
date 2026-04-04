@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
 import { DeleteCategoryDialog } from "@/features/category/components/delete-category-dialog";
 import { useState } from "react";
+import { EditCategoryForm } from "@/features/category/components/edit-category-form";
 
 export const CategoryColumnsActions = ({ category }: { category: Category }) => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
     return (
         <>
             <DropdownMenu>
@@ -23,7 +25,7 @@ export const CategoryColumnsActions = ({ category }: { category: Category }) => 
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => {}}>
+                    <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
                         <PenIcon />
                         Edit
                     </DropdownMenuItem>
@@ -39,6 +41,7 @@ export const CategoryColumnsActions = ({ category }: { category: Category }) => 
                 </DropdownMenuContent>
             </DropdownMenu>
             <DeleteCategoryDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} uid={category.uid} />
+            <EditCategoryForm category={category} open={isEditOpen} onOpenChange={setIsEditOpen} />
         </>
     );
 };

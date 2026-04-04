@@ -6,18 +6,22 @@ import { useAppForm } from "@/hooks/use-app-form";
 import { revalidateLogic } from "@tanstack/form-core";
 import { updateCategorySchema } from "@/features/category/category.schemas";
 import { useUpdateCategory } from "@/features/category/hooks/use-update-category";
-import { useEditCategoryStore } from "@/features/category/category.store";
-import { useEffect } from "react";
+import { Category } from "@/features/category/category.types";
 
-export const EditCategoryForm = () => {
-    const { isOpen, onOpenChange, clearCategory, category } = useEditCategoryStore();
+interface Props {
+    category: Category;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export const EditCategoryForm = ({ open, onOpenChange, category }: Props) => {
     const { mutateAsync, isPending } = useUpdateCategory();
 
     const form = useAppForm({
         defaultValues: {
-            name: "",
-            description: "",
-            parent_id: "",
+            name: category.name ?? "",
+            description: category.description ?? "",
+            parent_id: category.parent_id ?? "",
         },
         validationLogic: revalidateLogic(),
         validators: {
@@ -33,30 +37,15 @@ export const EditCategoryForm = () => {
                 },
                 {
                     onSuccess: () => {
-                        clearCategory();
-                        onOpenChange();
+                        onOpenChange(false);
                     },
                 }
             );
         },
     });
 
-    useEffect(() => {
-        if (category) {
-            form.setFieldValue("name", category.name ?? "");
-            form.setFieldValue("description", category.description ?? "");
-            form.setFieldValue("parent_id", category.parent_id ?? "");
-        }
-    }, [category, form]);
-
     return (
-        <Sheet
-            open={isOpen}
-            onOpenChange={() => {
-                onOpenChange();
-                clearCategory();
-            }}
-        >
+        <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent>
                 <SheetHeader>
                     <SheetTitle>Edit Category</SheetTitle>
