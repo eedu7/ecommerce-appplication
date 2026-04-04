@@ -27,10 +27,6 @@ class Config(BaseSettings):
     DB_POOL_PRE_PING: bool = True
     DB_MAX_OVERFLOW: int = 10
 
-    # Pagination
-    DEFAULT_PAGE_SIZE: int = 20
-    MAX_PAGE_SIZE: int = 100
-
     # Password Hashing
     PASSWORD_TIME_COST: int = Field(2, description="Number of iterations")
     PASSWORD_MEMORY_COST: int = Field(65536, description="64 MiB in KiB")

@@ -1,7 +1,7 @@
-from typing import List
+from typing import Annotated, List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from app.schemas.requests.category import (
     CategoryIn,
@@ -27,8 +27,12 @@ async def get_category(uid: UUID, controller: Category_Controller_Dep):
     "/",
     response_model=List[CategoryOut],
 )
-async def get_categories(controller: Category_Controller_Dep):
-    return await controller.get_all()
+async def get_categories(
+    controller: Category_Controller_Dep,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(gt=0)] = 20,
+):
+    return await controller.get_all(offset, limit)
 
 
 @router.post(
