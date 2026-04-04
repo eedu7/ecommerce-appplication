@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from sqlalchemy import select
+
 from app.models import DBCategory
 from app.repositories.category import CategoryRepository
 from app.schemas.requests.category import (
@@ -61,7 +63,9 @@ class CategoryController(BaseController[DBCategory]):
         return category
 
     async def delete(self, uid: UUID) -> None:
-        category = await self.get_by_uid(uid)
+        stmt = select(DBCategory).where(DBCategory.uid == uid)
+        result = await self.repository.session.execute(stmt)
+        category = result.scalars().first()
         if category is None:
             raise NotFoundException()
         await self.repository.delete(category)

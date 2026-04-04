@@ -24,7 +24,7 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
     parent_id: Mapped[UUID | None] = mapped_column(
         ForeignKey(
             "categories.uid",
-            ondelete="CASCADE",
+            ondelete="SET NULL",
         ),
         nullable=True,
         index=True,
@@ -33,13 +33,14 @@ class DBCategory(DBBase, PrimaryKeyMixin, TimestampMixin):
         "DBCategory",
         remote_side="DBCategory.uid",
         back_populates="children",
+        foreign_keys=[parent_id],
     )
     children: Mapped[List["DBCategory"]] = relationship(
         "DBCategory",
         back_populates="parent",
-        cascade="all, delete-orphan",
-        single_parent=True,
+        foreign_keys=[parent_id],
         lazy="selectin",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:
