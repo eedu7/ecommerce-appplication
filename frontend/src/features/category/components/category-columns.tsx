@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
-import { useEditCategoryStore } from "@/features/category/category.store";
+import { useDeleteCategoryStore, useEditCategoryStore } from "@/features/category/category.store";
 
 export const categoryColumns: ColumnDef<Category>[] = [
     {
@@ -66,6 +66,7 @@ export const categoryColumns: ColumnDef<Category>[] = [
         cell: ({ row }) => {
             const category = row.original;
             const { setCategory, onOpenChange } = useEditCategoryStore();
+            const { onOpenChange: onOpenDeleteCategoryChange, setUid } = useDeleteCategoryStore();
 
             return (
                 <DropdownMenu>
@@ -85,7 +86,13 @@ export const categoryColumns: ColumnDef<Category>[] = [
                             <PenIcon />
                             Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => {
+                                setUid(category.uid);
+                                onOpenDeleteCategoryChange();
+                            }}
+                        >
                             <TrashIcon />
                             Delete
                         </DropdownMenuItem>

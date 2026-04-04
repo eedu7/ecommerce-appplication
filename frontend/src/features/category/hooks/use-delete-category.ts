@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { apiBrowserClient } from "@/lib/api/api.client";
 
 interface Data {
@@ -6,10 +6,16 @@ interface Data {
 }
 
 export const useDeleteCategory = (): UseMutationResult<void, Error, Data> => {
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ uid }): Promise<void> =>
-            apiBrowserClient(`/category/${uid}`, {
+            apiBrowserClient(`/categories/${uid}`, {
                 method: "DELETE",
             }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["categories", "use-categories"],
+            });
+        },
     });
 };
