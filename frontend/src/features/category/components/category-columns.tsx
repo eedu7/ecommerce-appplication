@@ -2,15 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Category } from "@/features/category/category.types";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
-import { useDeleteCategoryStore, useEditCategoryStore } from "@/features/category/category.store";
+import { CategoryColumnsActions } from "@/features/category/components/category-columns-actions";
 
 export const categoryColumns: ColumnDef<Category>[] = [
     {
@@ -63,42 +55,6 @@ export const categoryColumns: ColumnDef<Category>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const category = row.original;
-            const { setCategory, onOpenChange } = useEditCategoryStore();
-            const { onOpenChange: onOpenDeleteCategoryChange, setUid } = useDeleteCategoryStore();
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="size-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontalIcon className="size-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            onClick={() => {
-                                setCategory(category);
-                                onOpenChange();
-                            }}
-                        >
-                            <PenIcon />
-                            Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            variant="destructive"
-                            onClick={() => {
-                                setUid(category.uid);
-                                onOpenDeleteCategoryChange();
-                            }}
-                        >
-                            <TrashIcon />
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
+        cell: ({ row }) => <CategoryColumnsActions category={row.original} />,
     },
 ];

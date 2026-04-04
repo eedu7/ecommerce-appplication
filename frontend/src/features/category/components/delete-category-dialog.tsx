@@ -9,16 +9,19 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDeleteCategoryStore } from "@/features/category/category.store";
 import { useDeleteCategory } from "@/features/category/hooks/use-delete-category";
 import { Spinner } from "@/components/ui/spinner";
 
-export const DeleteCategoryDialog = () => {
-    const { uid, isOpen, onOpenChange } = useDeleteCategoryStore();
+interface Props {
+    uid: string;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export const DeleteCategoryDialog = ({ uid, open, onOpenChange }: Props) => {
     const { mutateAsync, isPending } = useDeleteCategory();
-    if (!uid) return null;
     return (
-        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
