@@ -8,7 +8,7 @@ import { FormFieldError } from "./form-field-error";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCategories } from "@/features/category/hooks/use-categories";
 
-export const CategorySelectField = (): JSX.Element => {
+export const CategorySelectField = ({ parentId }: { parentId?: string | null }): JSX.Element => {
     const { data } = useCategories();
 
     const field = useFieldContext<string>();
@@ -18,7 +18,7 @@ export const CategorySelectField = (): JSX.Element => {
     return (
         <Field>
             <FieldLabel className="gap-1">Parent</FieldLabel>
-            <Select onValueChange={(e) => field.handleChange(e)}>
+            <Select onValueChange={(e) => field.handleChange(e)} defaultValue={parentId ?? ""}>
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select category" />
                 </SelectTrigger>

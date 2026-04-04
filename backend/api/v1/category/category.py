@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends
 
 from app.schemas.requests.category import (
     CategoryIn,
-    CategoryPartialUpdate,
     CategoryUpdate,
 )
 from app.schemas.responses.category import CategoryOut
@@ -47,17 +46,6 @@ async def create(data: CategoryIn, controller: Category_Controller_Dep):
     response_model=CategoryOut,
 )
 async def update(uid: UUID, data: CategoryUpdate, controller: Category_Controller_Dep):
-    return await controller.update(uid, data)
-
-
-@router.patch(
-    "/{uid}",
-    dependencies=[Depends(auth_required), Depends(admin_required)],
-    response_model=CategoryOut,
-)
-async def partial_update(
-    uid: UUID, data: CategoryPartialUpdate, controller: Category_Controller_Dep
-):
     return await controller.update(uid, data)
 
 

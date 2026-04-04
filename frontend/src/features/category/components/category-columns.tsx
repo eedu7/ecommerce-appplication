@@ -1,3 +1,4 @@
+"use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Category } from "@/features/category/category.types";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
+import { useEditCategoryStore } from "@/features/category/category.store";
 
 export const categoryColumns: ColumnDef<Category>[] = [
     {
@@ -63,6 +65,7 @@ export const categoryColumns: ColumnDef<Category>[] = [
         id: "actions",
         cell: ({ row }) => {
             const category = row.original;
+            const { setCategory, onOpenChange } = useEditCategoryStore();
 
             return (
                 <DropdownMenu>
@@ -73,7 +76,12 @@ export const categoryColumns: ColumnDef<Category>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                setCategory(category);
+                                onOpenChange();
+                            }}
+                        >
                             <PenIcon />
                             Edit
                         </DropdownMenuItem>

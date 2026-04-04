@@ -4,7 +4,6 @@ from app.models import DBCategory
 from app.repositories.category import CategoryRepository
 from app.schemas.requests.category import (
     CategoryIn,
-    CategoryPartialUpdate,
     CategoryUpdate,
 )
 from core.controller import BaseController
@@ -51,9 +50,7 @@ class CategoryController(BaseController[DBCategory]):
         await self.refresh(category)
         return category
 
-    async def update(
-        self, uid: UUID, data: CategoryUpdate | CategoryPartialUpdate
-    ) -> DBCategory:
+    async def update(self, uid: UUID, data: CategoryUpdate) -> DBCategory:
         category = await self.get_by_uid(uid)
         if category is None:
             raise NotFoundException()
