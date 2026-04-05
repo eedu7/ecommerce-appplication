@@ -10,3 +10,23 @@ async def admin_required(current_user: Current_User_Dep) -> DBUser:
             error_code="ADMIN_REQUIRED",
         )
     return current_user
+
+
+async def vendor_required(current_user: Current_User_Dep) -> DBUser:
+    if not current_user or current_user.role != DBUserRole.VENDOR:
+        raise ForbiddenException(
+            message="Vendor access required",
+            error_code="VENDOR_REQUIRED",
+        )
+    return current_user
+
+
+async def admin_or_vendor_required(current_user: Current_User_Dep) -> DBUser:
+    if not current_user or (
+        current_user.role != DBUserRole.ADMIN or current_user.role != DBUserRole.VENDOR
+    ):
+        raise ForbiddenException(
+            message="Admin or Vendor access required",
+            error_code="ADMIN_OR_VENDOR_REQUIRED",
+        )
+    return current_user

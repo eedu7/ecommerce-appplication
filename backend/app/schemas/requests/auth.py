@@ -29,7 +29,7 @@ class AuthIn(BaseModel):
     @field_validator("username")
     @classmethod
     def validate_username(cls, v: str) -> str:
-        if not re.match(r"^[a-zA-Z0-9_-]+$", v):
+        if not re.match(r"^[a-zA-Z0-9._-]+$", v):
             raise ValueError(
                 "Username can only contain letters, numbers, underscore (_), and hyphens (-)"
             )
@@ -72,7 +72,7 @@ class AuthLogin(BaseModel):
         except Exception:
             pass
 
-        if not re.match(r"^[a-zA-Z0-9_-]+$", v):
+        if not re.match(r"^[a-zA-Z0-9._-]+$", v):
             "Username can only contain letters, numbers, underscore (_), and hyphens (-)"
 
         return v
