@@ -9,7 +9,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDeleteCategory } from "@/features/category/hooks/use-delete-category";
+import { useDeleteCategory } from "@/features/categories/hooks/use-delete-category";
 import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
@@ -18,7 +18,8 @@ interface Props {
     onOpenChange: (open: boolean) => void;
 }
 
-export const DeleteCategoryDialog = ({ uid, open, onOpenChange }: Props) => {
+export const DeleteProductDialog = ({ uid, open, onOpenChange }: Props) => {
+    // TODO: useDeleteProduct
     const { mutateAsync, isPending } = useDeleteCategory();
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>

@@ -12,7 +12,7 @@ export const DashboardLayout = async ({ children }: { children: ReactNode }) => 
         <SidebarProvider>
             <DashboardSidebar />
             <SidebarInset>
-                <main className="p-12">{children}</main>
+                <main className="p-8">{children}</main>
             </SidebarInset>
         </SidebarProvider>
     );

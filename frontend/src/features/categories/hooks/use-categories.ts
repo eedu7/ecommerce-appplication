@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { apiBrowserClient } from "@/lib/api/api.client";
-import { Category } from "@/features/category/category.types";
+import { Category } from "@/features/categories/category.types";
 
 export const useCategories = ({
     offset = 0,

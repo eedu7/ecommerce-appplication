@@ -1,4 +1,4 @@
-import { CategoryDataTable } from "@/features/category/components/category-data-table";
+import { CategoryDataTable } from "@/features/categories/components/category-data-table";
 
 export const CategoryPage = () => {
     return (

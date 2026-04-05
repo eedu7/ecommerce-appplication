@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Category } from "@/features/category/category.types";
-import { CategoryColumnsActions } from "@/features/category/components/category-columns-actions";
+import { Category } from "@/features/categories/category.types";
+import { CategoryColumnsActions } from "@/features/categories/components/category-columns-actions";
 import { SelectColumn } from "@/components/data-table/select-column";
 
 export const categoryColumns: ColumnDef<Category>[] = [

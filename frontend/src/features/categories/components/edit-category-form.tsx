@@ -4,9 +4,9 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { FieldGroup, FieldSet } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/use-app-form";
 import { revalidateLogic } from "@tanstack/form-core";
-import { updateCategorySchema } from "@/features/category/category.schemas";
-import { useUpdateCategory } from "@/features/category/hooks/use-update-category";
-import { Category } from "@/features/category/category.types";
+import { updateCategorySchema } from "@/features/categories/category.schemas";
+import { useUpdateCategory } from "@/features/categories/hooks/use-update-category";
+import { Category } from "@/features/categories/category.types";
 
 interface Props {
     category: Category;

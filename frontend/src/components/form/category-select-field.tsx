@@ -6,7 +6,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { JSX } from "react";
 import { FormFieldError } from "./form-field-error";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useCategories } from "@/features/category/hooks/use-categories";
+import { useCategories } from "@/features/categories/hooks/use-categories";
 
 export const CategorySelectField = ({ parentId }: { parentId?: string | null }): JSX.Element => {
     const { data } = useCategories();

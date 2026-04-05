@@ -3,10 +3,10 @@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FieldSet } from "@/components/ui/field";
-import { useCreateCategory } from "@/features/category/hooks/use-create-category";
+import { useCreateCategory } from "@/features/categories/hooks/use-create-category";
 import { useAppForm } from "@/hooks/use-app-form";
 import { revalidateLogic } from "@tanstack/form-core";
-import { createCategorySchema } from "@/features/category/category.schemas";
+import { createCategorySchema } from "@/features/categories/category.schemas";
 import { PlusIcon } from "lucide-react";
 
 export const CreateCategoryForm = () => {

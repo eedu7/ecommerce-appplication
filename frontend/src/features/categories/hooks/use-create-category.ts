@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
-import { CreateCategorySchema } from "@/features/category/category.schemas";
-import { Category } from "@/features/category/category.types";
+import { CreateCategorySchema } from "@/features/categories/category.schemas";
+import { Category } from "@/features/categories/category.types";
 import { apiBrowserClient } from "@/lib/api/api.client";
 
 export const useCreateCategory = (): UseMutationResult<Category, Error, CreateCategorySchema> => {

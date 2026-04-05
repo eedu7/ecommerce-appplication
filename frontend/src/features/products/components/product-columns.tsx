@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Product } from "@/features/product/product.types";
+import { Product } from "@/features/products/product.types";
 import { SelectColumn } from "@/components/data-table/select-column";
+import { ProductColumnsActions } from "@/features/products/components/product-columns-actions";
 
 export const productColumns: ColumnDef<Product>[] = [
     SelectColumn<Product>(),
@@ -15,5 +16,10 @@ export const productColumns: ColumnDef<Product>[] = [
     {
         accessorKey: "sku",
         header: "Slug",
+    },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => <ProductColumnsActions product={row.original} />,
     },
 ];

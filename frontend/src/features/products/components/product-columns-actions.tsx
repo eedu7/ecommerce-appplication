@@ -1,5 +1,4 @@
 "use client";
-import { Category } from "@/features/category/category.types";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,13 +7,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, PenIcon, TrashIcon } from "lucide-react";
-import { DeleteCategoryDialog } from "@/features/category/components/delete-category-dialog";
 import { useState } from "react";
-import { EditCategoryForm } from "@/features/category/components/edit-category-form";
+import { Product } from "@/features/products/product.types";
+import { DeleteProductDialog } from "@/features/products/components/delete-product-dialog";
+import Link from "next/link";
 
-export const CategoryColumnsActions = ({ category }: { category: Category }) => {
+export const ProductColumnsActions = ({ product }: { product: Product }) => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
     return (
         <>
             <DropdownMenu>
@@ -25,9 +24,11 @@ export const CategoryColumnsActions = ({ category }: { category: Category }) => 
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
-                        <PenIcon />
-                        Edit
+                    <DropdownMenuItem asChild>
+                        <Link href={`/dashboard/products/${product.uid}`}>
+                            <PenIcon />
+                            Edit
+                        </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         variant="destructive"
@@ -40,8 +41,7 @@ export const CategoryColumnsActions = ({ category }: { category: Category }) => 
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <DeleteCategoryDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} uid={category.uid} />
-            <EditCategoryForm category={category} open={isEditOpen} onOpenChange={setIsEditOpen} />
+            <DeleteProductDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} uid={product.uid} />
         </>
     );
 };

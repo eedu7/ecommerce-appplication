@@ -10,11 +10,11 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { LayoutDashboardIcon, LucideIcon, PackageIcon, ShoppingBagIcon } from "lucide-react";
-import Link from "next/link";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarUserButton } from "@/features/dashboard/components/sidebar-user-button";
+} from "@/components/ui/sidebar"
+import { LayoutDashboardIcon, LucideIcon, PackageIcon, ShoppingBagIcon } from "lucide-react"
+import Link from "next/link"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { SidebarUserButton } from "@/features/dashboard/components/sidebar-user-button"
 
 interface DashboardSidebarContentItemProps {
     title: string;
@@ -31,12 +31,12 @@ const items: DashboardSidebarContentItemProps[] = [
     {
         title: "Category",
         icon: PackageIcon,
-        href: "/dashboard/category",
+        href: "/dashboard/categories",
     },
     {
         title: "Product",
         icon: ShoppingBagIcon,
-        href: "/dashboard/product",
+        href: "/dashboard/products",
     },
 ];
 

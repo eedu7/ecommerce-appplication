@@ -1,4 +1,4 @@
-import { ProductDataTable } from "@/features/product/components/product-data-table";
+import { ProductDataTable } from "@/features/products/components/product-data-table";
 
 export const ProductPage = () => {
     return (
