@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 
-from app.schemas.requests.product import ProductIn
+from app.schemas.requests.product import ProductIn, ProductUpdate
 from core.dependencies.auth import auth_required
 from core.dependencies.controller import Product_Controller_Dep
 
@@ -38,8 +38,10 @@ async def create_product(data: ProductIn, controller: Product_Controller_Dep):
         Depends(auth_required),
     ],
 )
-async def update_product(uid: UUID, controller: Product_Controller_Dep):
-    pass
+async def update_product(
+    uid: UUID, data: ProductUpdate, controller: Product_Controller_Dep
+):
+    return await controller.update_product(uid, data)
 
 
 @router.delete(
@@ -49,4 +51,4 @@ async def update_product(uid: UUID, controller: Product_Controller_Dep):
     ],
 )
 async def delete_product(uid: UUID, controller: Product_Controller_Dep):
-    pass
+    await controller.delete_product(uid)
