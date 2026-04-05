@@ -2,7 +2,7 @@ import { CategoryDataTable } from "@/features/category/components/category-data-
 
 export const CategoryPage = () => {
     return (
-        <main className="flex flex-col gap-12">
+        <main>
             <CategoryDataTable />
         </main>
     );

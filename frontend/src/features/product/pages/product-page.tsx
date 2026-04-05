@@ -1,3 +1,9 @@
+import { ProductDataTable } from "@/features/product/components/product-data-table";
+
 export const ProductPage = () => {
-    return <h1>Product Page</h1>;
+    return (
+        <main>
+            <ProductDataTable />
+        </main>
+    );
 };
