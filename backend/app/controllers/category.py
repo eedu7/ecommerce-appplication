@@ -38,8 +38,8 @@ class CategoryController(BaseController[DBCategory]):
                 error_code="DuplicateCategoryName",
             )
 
-        if data.parent_id:
-            parent = await self.repository.get_by_uid(data.parent_id)
+        if data.parent_uid:
+            parent = await self.repository.get_by_uid(data.parent_uid)
             if not parent:
                 raise NotFoundException(
                     message="Parent category not found",

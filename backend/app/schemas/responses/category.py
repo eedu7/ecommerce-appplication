@@ -8,7 +8,7 @@ class CategoryOut(BaseModel):
     uid: UUID
     name: str
     description: str | None = None
-    parent_id: UUID | None = None
+    parent_uid: UUID | None = None
     children: List["CategoryOut"] = []
 
     model_config = ConfigDict(from_attributes=True)
