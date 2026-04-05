@@ -22,8 +22,13 @@ class CategoryRepository(BaseRepository[DBCategory]):
         return await self.get_one_by_filters({"name": name})
 
     async def get_all(
-        self, skip: int = 0, limit: int | None = None
+        self, offset: int = 0, limit: int | None = None
     ) -> Sequence[DBCategory]:
-        stmt = select(DBCategory).options(selectinload(DBCategory.children))
+        stmt = (
+            select(DBCategory)
+            .offset(offset)
+            .limit(limit)
+            .options(selectinload(DBCategory.children))
+        )
         result = await self.session.execute(stmt)
         return result.scalars().all()

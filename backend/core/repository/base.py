@@ -18,7 +18,6 @@ class BaseRepository(Generic[T]):
         return await self.session.get(self.model, uid)
 
     async def get_all(self, offset: int = 0, limit: int = 20) -> Sequence[T]:
-
         return await self.get_by_filters(offset=offset, limit=limit)
 
     async def get_by_filters(

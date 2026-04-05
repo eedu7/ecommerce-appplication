@@ -28,7 +28,7 @@ class BaseController(Generic[T]):
             raise NotFoundException()
         return db_obj
 
-    async def get_all(self, offset: int = 0, limit: int | None = None) -> Sequence[T]:
+    async def get_all(self, offset: int = 0, limit: int = 20) -> Sequence[T]:
         return await self.repository.get_all(offset=offset, limit=limit)
 
     async def exists(self, uid: UUID) -> bool:
