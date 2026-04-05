@@ -1,29 +1,11 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Category } from "@/features/category/category.types";
-import { Checkbox } from "@/components/ui/checkbox";
 import { CategoryColumnsActions } from "@/features/category/components/category-columns-actions";
+import { SelectColumn } from "@/components/data-table/select-column";
 
 export const categoryColumns: ColumnDef<Category>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
+    SelectColumn<Category>(),
     {
         accessorKey: "name",
         header: "Name",
@@ -31,11 +13,6 @@ export const categoryColumns: ColumnDef<Category>[] = [
     {
         accessorKey: "description",
         header: "Description",
-        cell: ({ row }) => {
-            const description = row.original.description;
-
-            return description ? description : "-";
-        },
     },
     {
         accessorKey: "parent_id",
@@ -44,13 +21,13 @@ export const categoryColumns: ColumnDef<Category>[] = [
             const parentId = row.original.parent_id;
 
             if (!parentId) {
-                return "-";
+                return null;
             }
 
             const allData = table.options.data as Category[];
             const parent = allData.find((cat) => cat.uid === parentId);
 
-            return parent ? parent.name : "-";
+            return parent?.name;
         },
     },
     {
